@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  mlflow:
+    image: mlflow/mlflow:latest
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./mlruns:/mlflow/mlruns
+
+  sales_pipeline:
+    build: .
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+    depends_on:
+      - mlflow
+    volumes:
+      - .:/app
+    command: ["python", "pipeline/sales_data_pipeline.py"]
