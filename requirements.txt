@@ -1,6 +1,9 @@
-tensorflow==2.10
-mysql-connector-python==8.0.30  # or psycopg2 for PostgreSQL
-python-dotenv==0.20.0           # To manage environment variables
-mlflow
+tensorflow==2.8.0
 numpy
 pandas
+sqlalchemy
+mlflow
+fastapi
+uvicorn
+docker
+psycopg2
