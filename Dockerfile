@@ -1,20 +1,19 @@
-# Use an official Python runtime as a parent image
-FROM python:3.10-slim
+# Use an official TensorFlow image as the base image
+FROM tensorflow:2.11.0
 
-# Set the working directory inside the container
+# Set the working directory
 WORKDIR /app
 
-# Copy the current directory contents into the container at /app
-COPY . /app
-
 # Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
 
-# Set environment variables (optional, can be overwritten by Docker Compose or -e flag)
-ENV DB_TYPE mysql
+# Copy the project files to the container
+COPY . .
 
-# Expose any necessary ports (optional, if needed)
-EXPOSE 5000  # If running a web server, not necessary for this case
+# Expose port for MLflow tracking server (optional)
+EXPOSE 5000
 
-# Run the application
-CMD ["python", "pipeline/pipeline.py"]
+# Set the default command to run the sales data pipeline
+CMD ["python", "pipeline/sales_data_pipeline.py"]
+
