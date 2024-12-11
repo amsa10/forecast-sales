@@ -14,3 +14,4 @@ your_project/
 ├── Dockerfile                 # Docker configuration file
 ├── docker-compose.yml         # Docker Compose configuration file (optional)
 └── README.md                  # Project description
+![image](https://github.com/user-attachments/assets/13c99b41-afed-4194-b574-ccc753be7c8f)
