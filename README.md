@@ -1,7 +1,7 @@
 # forecast-sales
 
+![image](https://github.com/user-attachments/assets/c5a0a28d-ac48-4f89-91fd-149b8c6a9668)
 
-![image](https://github.com/user-attachments/assets/13c99b41-afed-4194-b574-ccc753be7c8f)
 
 docker build -t sales-pipeline .
 
