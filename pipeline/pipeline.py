@@ -1,30 +1,32 @@
 import tensorflow as tf
 from pipeline.data_preprocessing import fetch_sales_data, preprocess_data
 from pipeline.model import create_model
+import tensorflow as tf
+import mlflow
+import mlflow.keras
+from pipeline.database import get_connection
 
-def train_model():
-    """Train the model using data from the cloud database."""
-    model = create_model()
+def train_model(batch_size: int = 32, epochs: int = 10):
+    """Train the model and track experiments with MLflow."""
+    with mlflow.start_run():
+        mlflow.log_param("batch_size", batch_size)
+        mlflow.log_param("epochs", epochs)
+        
+        model = create_model()
+        dataset = create_tf_dataset(batch_size=batch_size)
 
-    # Setup the data pipeline using TensorFlow Dataset
-    batch_size = 32
-    dataset = tf.data.Dataset.from_generator(
-        lambda: fetch_sales_data(batch_size),
-        output_signature=tf.TensorSpec(shape=(batch_size, 1), dtype=tf.float32)
-    )
+        # Train the model
+        model.fit(dataset, epochs=epochs)
 
-    dataset = dataset.map(lambda batch: preprocess_data(batch))
+        # Log metrics to MLflow
+        for epoch in range(epochs):
+            loss = model.history.history['loss'][epoch]
+            mae = model.history.history['mae'][epoch]
+            mlflow.log_metric("loss", loss, step=epoch)
+            mlflow.log_metric("mae", mae, step=epoch)
 
-    # Set up model checkpoint callback
-    checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
-        'model_checkpoint.h5', save_best_only=True
-    )
-
-    # Train the model
-    model.fit(dataset, epochs=10, callbacks=[checkpoint_callback])
-
-    # Save the final model
-    model.save('sales_model.h5')
+        # Log the trained model with MLflow
+        mlflow.keras.log_model(model, "sales_model")
 
 if __name__ == "__main__":
-    train_model()
+    train_model(batch_size=32, epochs=10)
