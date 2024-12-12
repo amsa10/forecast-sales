@@ -4,37 +4,25 @@ services:
   kafka:
     image: wurstmeister/kafka:latest
     environment:
-      KAFKA_ADVERTISED_LISTENER: INSIDE:9093
-      KAFKA_LISTENER: INSIDE://kafka:9093
-      KAFKA_LISTENER_SECURITY_PROTOCOL: PLAINTEXT
-      KAFKA_LISTENER_NAME_INTERNAL: INSIDE
+      KAFKA_ADVERTISED_LISTENER: INSIDE_KAFKA:9093
+      KAFKA_LISTENER: INSIDE_KAFKA:9093
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_LISTENER_PORT: 9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL: PLAINTEXT
     ports:
       - "9093:9093"
-    networks:
-      - backend
+    depends_on:
+      - zookeeper
 
   zookeeper:
     image: wurstmeister/zookeeper:latest
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
     ports:
       - "2181:2181"
-    networks:
-      - backend
-
+      
   tensorflow-serving:
-    image: tensorflow/serving
-    command: --model_name=sales_model --model_base_path=/models
+    build: .
     ports:
-      - "8501:8501"
+      - "8501:8501"  # Expose port for TensorFlow Serving
     volumes:
-      - ./models:/models
-    networks:
-      - backend
+      - ./models:/models  # Mount the model directory
 
-networks:
-  backend:
-    driver: bridge
 
