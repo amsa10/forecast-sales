@@ -4,7 +4,7 @@ import random
 import time
 
 # Kafka configuration
-producer = Producer({'bootstrap.servers': 'localhost:9092'})  # Update with your Kafka broker
+producer = Producer({'bootstrap.servers': 'localhost:9093'})  # Use Kafka broker
 
 topic = 'sales_data'  # Kafka topic
 
@@ -16,7 +16,7 @@ def delivery_report(err, msg):
         print(f"Message delivered to {msg.topic()} [{msg.partition()}]")
 
 # Simulate sales data and send to Kafka
-for i in range(1000):  # Simulating 1000 messages
+for i in range(1000):  # Simulate 1000 messages
     data = {
         "customer_id": f"customer_{i}",
         "transaction_amount": random.uniform(10.0, 500.0),
