@@ -1,6 +1,6 @@
-apache-airflow==2.7.0
-tensorflow==2.11.0
-mlflow==2.0.0
-pandas==1.5.3
-sqlite3==3.36.0
-numpy==1.23.4
+tensorflow==2.10.0
+confluent-kafka==1.8.2
+faust==1.10.0
+requests==2.28.1
+flask==2.1.2
+
