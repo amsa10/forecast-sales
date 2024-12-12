@@ -1,7 +1,7 @@
 # forecast-sales
 
+![image](https://github.com/user-attachments/assets/5d5a52d2-8242-4a4d-a0fa-6990f2c089df)
 
-![image](https://github.com/user-attachments/assets/c5a0a28d-ac48-4f89-91fd-149b8c6a9668)
 
 
 # Sales Forecasting Project
