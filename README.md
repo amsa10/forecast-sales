@@ -6,7 +6,7 @@
 
 # Sales Forecasting Project
 
-This project demonstrates how to use **Kafka**, **Faust**, **TensorFlow Serving**, and **Docker** to build a real-time sales forecasting pipeline.
+This project implements a real-time sales forecasting system using Kafka, TensorFlow Serving, Faust, and Docker. It allows for the continuous stream of sales data, real-time prediction, and deployment in the cloud.
 
 ## Components
 
