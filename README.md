@@ -4,15 +4,19 @@
 ![image](https://github.com/user-attachments/assets/c5a0a28d-ac48-4f89-91fd-149b8c6a9668)
 
 
-docker build -t sales-pipeline .
+# Sales Forecasting Project
 
-docker-compose up --build
+This project demonstrates how to use **Kafka**, **Faust**, **TensorFlow Serving**, and **Docker** to build a real-time sales forecasting pipeline.
 
-docker-compose down
+## Components
 
-After running the Docker container or Docker Compose, the sales data pipeline will execute:
+1. **Kafka Producer**: Simulates the real-time streaming of sales data.
+2. **Faust Consumer**: Consumes the data from Kafka, sends it to TensorFlow Serving for predictions.
+3. **TensorFlow Serving**: Serves the trained model and handles predictions.
 
-It will connect to the cloud database.
-It will fetch the data in batches.
-The data will be preprocessed and fed into the model.
-The model will train and save checkpoints, and finally, the trained model will be saved as sales_model.h5.
+## Setup
+
+1. Build Docker images:
+   ```bash
+   docker-compose build
+
