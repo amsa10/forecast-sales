@@ -1,21 +1,40 @@
-version: "3.8"
+version: '3'
 
 services:
-  mlflow:
-    image: mlflow/mlflow:latest
+  kafka:
+    image: wurstmeister/kafka:latest
     environment:
-      - MLFLOW_TRACKING_URI=http://mlflow:5000
+      KAFKA_ADVERTISED_LISTENER: INSIDE:9093
+      KAFKA_LISTENER: INSIDE://kafka:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL: PLAINTEXT
+      KAFKA_LISTENER_NAME_INTERNAL: INSIDE
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_PORT: 9093
     ports:
-      - "5000:5000"
-    volumes:
-      - ./mlruns:/mlflow/mlruns
+      - "9093:9093"
+    networks:
+      - backend
 
-  sales_pipeline:
-    build: .
+  zookeeper:
+    image: wurstmeister/zookeeper:latest
     environment:
-      - MLFLOW_TRACKING_URI=http://mlflow:5000
-    depends_on:
-      - mlflow
+      ZOOKEEPER_CLIENT_PORT: 2181
+    ports:
+      - "2181:2181"
+    networks:
+      - backend
+
+  tensorflow-serving:
+    image: tensorflow/serving
+    command: --model_name=sales_model --model_base_path=/models
+    ports:
+      - "8501:8501"
     volumes:
-      - .:/app
-    command: ["python", "pipeline/sales_data_pipeline.py"]
+      - ./models:/models
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+
