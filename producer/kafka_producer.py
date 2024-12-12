@@ -1,27 +1,31 @@
 from confluent_kafka import Producer
-import json
 import random
 import time
+import json
 
-# Kafka configuration
-producer = Producer({'bootstrap.servers': 'localhost:9093'})  # Use Kafka broker
+# Set up the Kafka producer
+producer = Producer({'bootstrap.servers': 'kafka:9093'})
 
-topic = 'sales_data'  # Kafka topic
+# Define Kafka topic
+topic = 'sales_data'
 
-def delivery_report(err, msg):
-    """Called once for each message produced to indicate delivery result."""
+def generate_sales_data():
+    """Generate random sales data."""
+    customer_id = random.randint(1000, 9999)
+    transaction_amount = round(random.uniform(10, 500), 2)
+    transaction_date = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime())
+    return {'customer_id': customer_id, 'transaction_amount': transaction_amount, 'transaction_date': transaction_date}
+
+def on_delivery(err, msg):
+    """Callback function to check message delivery."""
     if err is not None:
-        print(f"Message delivery failed: {err}")
+        print('Message delivery failed: {}'.format(err))
     else:
-        print(f"Message delivered to {msg.topic()} [{msg.partition()}]")
+        print('Message delivered to {} [{}]'.format(msg.topic(), msg.partition()))
 
-# Simulate sales data and send to Kafka
-for i in range(1000):  # Simulate 1000 messages
-    data = {
-        "customer_id": f"customer_{i}",
-        "transaction_amount": random.uniform(10.0, 500.0),
-        "transaction_date": time.strftime('%Y-%m-%d %H:%M:%S')
-    }
-    producer.produce(topic, key=str(i), value=json.dumps(data), callback=delivery_report)
+# Send data every 1 second
+while True:
+    sales_data = generate_sales_data()
+    producer.produce(topic, json.dumps(sales_data), callback=on_delivery)
     producer.flush()
-    time.sleep(0.1)  # Simulate time between transactions
+    time.sleep(1)
