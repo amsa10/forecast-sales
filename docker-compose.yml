@@ -17,12 +17,33 @@ services:
     image: wurstmeister/zookeeper:latest
     ports:
       - "2181:2181"
-      
+
   tensorflow-serving:
-    build: .
+    image: tensorflow/serving
     ports:
-      - "8501:8501"  # Expose port for TensorFlow Serving
+      - "8501:8501"
     volumes:
-      - ./models:/models  # Mount the model directory
+      - ./models:/models
+    environment:
+      - MODEL_NAME=sales_model
+    depends_on:
+      - kafka  # Ensure Kafka is up before starting TensorFlow Serving
+
+  faust-consumer:
+    build:
+      context: .
+      dockerfile: Dockerfile.consumer
+    depends_on:
+      - kafka
+      - tensorflow-serving
+    command: python consumer/kafka_streams.py  # Automatically run the Faust Consumer
+
+  kafka-producer:
+    build:
+      context: .
+      dockerfile: Dockerfile.producer
+    depends_on:
+      - kafka
+    command: python producer/kafka_producer.py  # Automatically run the Kafka Producer
 
 
