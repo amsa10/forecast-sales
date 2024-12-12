@@ -1,6 +1,6 @@
 # forecast-sales
 
-![image](https://github.com/user-attachments/assets/5d5a52d2-8242-4a4d-a0fa-6990f2c089df)
+![image](https://github.com/user-attachments/assets/e2c7cb23-8b4d-42cf-b922-1d0886d08e0a)
 
 
 
