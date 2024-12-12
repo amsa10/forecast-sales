@@ -1,19 +1,20 @@
-# Use an official TensorFlow image as the base image
-FROM tensorflow:2.11.0
+import tensorflow as tf
+import numpy as np
 
-# Set the working directory
-WORKDIR /app
+# Generate random sales data for training
+np.random.seed(42)
+X_train = np.random.uniform(10, 500, 1000)  # Transaction amounts
+y_train = X_train * 0.5 + np.random.normal(0, 10, 1000)  # Target (predicted sales)
 
-# Install dependencies
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+# Define the model (simple linear regression)
+model = tf.keras.Sequential([
+    tf.keras.layers.Dense(1, input_dim=1)
+])
 
-# Copy the project files to the container
-COPY . .
+model.compile(optimizer='adam', loss='mean_squared_error')
 
-# Expose port for MLflow tracking server (optional)
-EXPOSE 5000
+# Train the model
+model.fit(X_train, y_train, epochs=5)
 
-# Set the default command to run the sales data pipeline
-CMD ["python", "pipeline/sales_data_pipeline.py"]
-
+# Save the model
+model.save('./models/sales_model/1/sales_model.h5')
