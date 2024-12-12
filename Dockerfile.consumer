@@ -1,0 +1,13 @@
+FROM python:3.8-slim
+
+# Set the working directory
+WORKDIR /app
+
+# Install required libraries
+RUN pip install faust requests
+
+# Copy the Faust consumer script
+COPY consumer/kafka_streams.py /app/
+
+# Run the consumer script when the container starts
+CMD ["python", "kafka_streams.py"]
